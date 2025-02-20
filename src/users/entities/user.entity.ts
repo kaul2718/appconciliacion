@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { ConciliacionBancaria } from 'src/conciliacionbancaria/entities/conciliacionbancaria.entity';
+import { UsuariosCuentas } from 'src/usuarioscuentas/dto/create-usuarioscuenta.dto';
 
 @Entity()
 export class User {
@@ -21,6 +21,9 @@ export class User {
   @Column({ nullable: true })
   deletedAt: Date;
 
-  @OneToMany(() => ConciliacionBancaria, conciliacion => conciliacion.user)
-  conciliaciones: ConciliacionBancaria[];
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  creado_en: Date;
+  
+  @OneToMany(() => UsuariosCuentas, (usuarioCuenta) => usuarioCuenta.usuario)
+  cuentas: UsuariosCuentas[];
 }

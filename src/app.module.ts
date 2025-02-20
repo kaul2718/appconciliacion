@@ -3,13 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { AjustecontableModule } from './ajustecontable/ajustecontable.module';
-import { ConciliacionbancariaModule } from './conciliacionbancaria/conciliacionbancaria.module';
 import { CuentabancariaModule } from './cuentabancaria/cuentabancaria.module';
-import { DiferenciaModule } from './diferencia/diferencia.module';
 import { ExtractobancarioModule } from './extractobancario/extractobancario.module';
-import { LibrocontableModule } from './librocontable/librocontable.module';
 import { ConfigModule } from '@nestjs/config';
+import { UsuarioscuentasModule } from './usuarioscuentas/usuarioscuentas.module';
+import { TransaccionesBancariasModule } from './transacciones-bancarias/transacciones-bancarias.module';
+import { ConciliacionesModule } from './conciliaciones/conciliaciones.module';
+import { DetallesconciliacionModule } from './detallesconciliacion/detallesconciliacion.module';
+import { AjustesconciliacionModule } from './ajustesconciliacion/ajustesconciliacion.module';
+import { AuditoriaconciliacionesModule } from './auditoriaconciliaciones/auditoriaconciliaciones.module';
+import { ReportesModule } from './reportes/reportes.module';
 
 @Module({
   imports: [
@@ -38,12 +41,15 @@ import { ConfigModule } from '@nestjs/config';
       },
     }),
     AuthModule,
-    AjustecontableModule,
-    ConciliacionbancariaModule,
     CuentabancariaModule,
-    DiferenciaModule,
     ExtractobancarioModule,
-    LibrocontableModule,
+    UsuarioscuentasModule,
+    TransaccionesBancariasModule,
+    ConciliacionesModule,
+    DetallesconciliacionModule,
+    AjustesconciliacionModule,
+    AuditoriaconciliacionesModule,
+    ReportesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
