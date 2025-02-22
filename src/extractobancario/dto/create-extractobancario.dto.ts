@@ -1,18 +1,14 @@
-import { IsDate, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 export class CreateExtractobancarioDto {
-    @IsDate()
     @IsNotEmpty()
+    @IsString()
+    cuenta_id: string;
+
+    @IsNotEmpty()
+    @IsDateString()
     fecha: Date;
-  
-    @IsNumber()
+
     @IsNotEmpty()
-    saldoInicial: number;
-  
-    @IsNumber()
-    @IsNotEmpty()
-    saldoFinal: number;
-  
-    @IsNumber()
-    @IsNotEmpty()
-    cuentaId: number; // Relación con CuentaBancaria
+    @IsString()
+    archivo: string;
 }

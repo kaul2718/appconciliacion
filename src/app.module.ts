@@ -13,6 +13,7 @@ import { DetallesconciliacionModule } from './detallesconciliacion/detallesconci
 import { AjustesconciliacionModule } from './ajustesconciliacion/ajustesconciliacion.module';
 import { AuditoriaconciliacionesModule } from './auditoriaconciliaciones/auditoriaconciliaciones.module';
 import { ReportesModule } from './reportes/reportes.module';
+import { MovimientoextractoModule } from './movimientoextracto/movimientoextracto.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ReportesModule } from './reportes/reportes.module';
     AjustesconciliacionModule,
     AuditoriaconciliacionesModule,
     ReportesModule,
+    MovimientoextractoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

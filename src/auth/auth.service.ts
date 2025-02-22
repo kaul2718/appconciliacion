@@ -21,7 +21,7 @@ export class AuthService {
     }
   
     // Asignar rol por defecto si no se proporciona
-    const userRole = role ?? Role.CLIENT;
+    const userRole = role ?? Role.CONT;
   
     // Crear usuario con todos los campos requeridos
     await this.usersService.create({

@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, DeleteDateColumn } from 'typeorm';
 import { CuentaBancaria } from 'src/cuentabancaria/entities/cuentabancaria.entity';
+import { TipoMovimientoFinanciero } from 'src/common/enums/tipomovimientofinan';
 
 @Entity()
 export class TransaccionesBancarias {
@@ -19,12 +20,15 @@ export class TransaccionesBancarias {
   @Column({ type: 'decimal', precision: 15, scale: 2 })
   monto: number;
 
-  @Column({ type: 'enum', enum: ['ingreso', 'egreso'] })
-  tipo: string;
+  @Column()
+  tipo: TipoMovimientoFinanciero;
 
   @Column({ length: 100 })
   referencia: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   creado_en: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 }

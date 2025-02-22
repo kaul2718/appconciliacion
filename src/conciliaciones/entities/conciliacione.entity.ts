@@ -4,6 +4,7 @@ import { DetallesConciliacion } from 'src/detallesconciliacion/entities/detalles
 import { AuditoriaConciliaciones } from 'src/auditoriaconciliaciones/entities/auditoriaconciliacione.entity';
 import { AjustesConciliacion } from 'src/ajustesconciliacion/entities/ajustesconciliacion.entity';
 import { Reportes } from 'src/reportes/entities/reporte.entity';
+import { ExtractosBancarios } from 'src/extractobancario/entities/extractobancario.entity';
 @Entity()
 export class Conciliaciones {
   @PrimaryGeneratedColumn()
@@ -12,6 +13,10 @@ export class Conciliaciones {
   @ManyToOne(() => CuentaBancaria, (cuenta) => cuenta.conciliaciones)
   @JoinColumn({ name: 'cuenta_id' })
   cuenta: CuentaBancaria;
+
+  @ManyToOne(() => ExtractosBancarios, (extracto) => extracto.conciliaciones)
+  @JoinColumn({ name: 'extracto_id' })
+  extracto: ExtractosBancarios; // Agrega esta relación
 
   @Column({ type: 'date' })
   fecha_inicio: Date;

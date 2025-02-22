@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, DeleteDateColumn } from 'typeorm';
 import { ExtractosBancarios } from 'src/extractobancario/entities/extractobancario.entity';
 import { UsuariosCuentas } from 'src/usuarioscuentas/dto/create-usuarioscuenta.dto';
 import { TransaccionesBancarias } from 'src/transacciones-bancarias/entities/transacciones-bancaria.entity';
 import { Conciliaciones } from 'src/conciliaciones/entities/conciliacione.entity';
+import { TipoCuentaBancaria } from 'src/common/enums/tipocuenta.enum';
 @Entity()
 export class CuentaBancaria {
   @PrimaryGeneratedColumn()
@@ -14,11 +15,14 @@ export class CuentaBancaria {
   @Column({ length: 50, unique: true })
   numero_cuenta: string;
 
-  @Column({ type: 'enum', enum: ['ahorros', 'corriente'] })
-  tipo: string;
+  @Column()
+  tipo: TipoCuentaBancaria;
 
   @Column({ length: 10 })
   moneda: string;
+  
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   creado_en: Date;
