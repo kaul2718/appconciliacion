@@ -1,34 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { UsuarioscuentasService } from './usuarioscuentas.service';
-import { CreateUsuarioscuentaDto } from './dto/create-usuarioscuenta.dto';
-import { UpdateUsuarioscuentaDto } from './dto/update-usuarioscuenta.dto';
+import { Controller, Post, Get, Param, Body, NotFoundException } from '@nestjs/common';
+import { UsuariosCuentasService } from './usuarioscuentas.service';
+import { UsuariosCuentas } from './entities/usuarioscuenta.entity';
+import { CuentaBancaria } from 'src/cuentabancaria/entities/cuentabancaria.entity';
+import { User } from 'src/users/entities/user.entity';
+@Controller('usuarios-cuentas')
+export class UsuariosCuentasController {
+  constructor(private readonly usuariosCuentasService: UsuariosCuentasService) { }
 
-@Controller('usuarioscuentas')
-export class UsuarioscuentasController {
-  constructor(private readonly usuarioscuentasService: UsuarioscuentasService) {}
-
-  @Post()
-  create(@Body() createUsuarioscuentaDto: CreateUsuarioscuentaDto) {
-    return this.usuarioscuentasService.create(createUsuarioscuentaDto);
+  // Asignar una cuenta a un usuario
+  @Post('asignar')
+  async asignarCuentaAUsuario(
+    @Body('usuarioId') usuarioId: number,
+    @Body('cuentaId') cuentaId: number,
+  ): Promise<UsuariosCuentas> {
+    return this.usuariosCuentasService.asignarCuentaAUsuario(usuarioId, cuentaId);
   }
 
-  @Get()
-  findAll() {
-    return this.usuarioscuentasService.findAll();
+  // Obtener las cuentas de un usuario
+  @Get('usuario/:usuarioId/cuentas')
+  async obtenerCuentasDeUsuario(@Param('usuarioId') usuarioId: number): Promise<CuentaBancaria[]> {
+    return this.usuariosCuentasService.obtenerCuentasDeUsuario(usuarioId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usuarioscuentasService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUsuarioscuentaDto: UpdateUsuarioscuentaDto) {
-    return this.usuarioscuentasService.update(+id, updateUsuarioscuentaDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usuarioscuentasService.remove(+id);
+  // Obtener los usuarios de una cuenta
+  @Get('cuenta/:cuentaId/usuarios')
+  async obtenerUsuariosDeCuenta(@Param('cuentaId') cuentaId: number): Promise<User[]> {
+    return this.usuariosCuentasService.obtenerUsuariosDeCuenta(cuentaId);
   }
 }

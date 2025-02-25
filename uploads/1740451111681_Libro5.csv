@@ -1,0 +1,5 @@
+fecha,descripcion,monto,tipo,referencia
+2025-02-01,Deposito en cuenta,1000,Ingreso,ABC123
+2025-02-10,Retiros de cajero,500,Egreso,DEF456
+2025-02-20,Compra en tienda,200,Egreso,GHI789
+2025-02-25,Depósito de efectivo,1500,Ingreso,JKL012

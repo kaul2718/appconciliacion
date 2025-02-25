@@ -1,0 +1,5 @@
+fecha,descripcion,monto,tipo,referencia
+2025-02-01,Deposito Inicial al mes de Febrero,4000,Ingreso,ABC123
+2025-02-10,Pago prestamo mensual,1000,Egreso,DEF456
+2025-02-20,Pago luz mensual,50,Egreso,GHI789
+2025-02-25,Depósito de efectivo,1500,Ingreso,JKL012

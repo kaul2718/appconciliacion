@@ -29,6 +29,12 @@ export class TransaccionesBancarias {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   creado_en: Date;
 
+  @Column({ type: 'decimal', precision: 15, scale: 2, nullable: true })
+  saldoFinal: number;  // Este es el saldo después de aplicar la transacción
+
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
+  
+  @Column({ type: 'decimal', precision: 15, scale: 2 })
+  saldo: number;  // Asegúrate de que esta propiedad exista
 }

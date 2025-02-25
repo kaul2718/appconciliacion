@@ -1,31 +1,51 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, NotFoundException } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, NotFoundException, BadRequestException } from '@nestjs/common';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { ExtractoBancarioService } from './extractobancario.service';
-import { ConciliacionService } from 'src/conciliaciones/conciliaciones.service';
 import { CreateExtractobancarioDto } from './dto/create-extractobancario.dto';
 import { ExtractosBancarios } from './entities/extractobancario.entity';
-import { MovimientoExtracto } from 'src/movimientoextracto/entities/movimientoextracto.entity';
+import * as csv from 'csv-parser'; // Para procesar archivos CSV.
+import * as fs from 'fs'; // Para leer el archivo.
 
 @Controller('extractos-bancarios')
 export class ExtractoBancarioController {
   constructor(
     private readonly extractoService: ExtractoBancarioService,
-    private readonly conciliacionService: ConciliacionService,
-  ) {}
+  ) { }
 
   // Subir un archivo de extracto bancario y procesarlo
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file')) // 'file' es el nombre del campo en el formulario
+  @UseInterceptors(FileInterceptor('archivo'))
   async uploadExtracto(
     @UploadedFile() file: Express.Multer.File,
     @Body() createExtractoDTO: CreateExtractobancarioDto,
-  ): Promise<ExtractosBancarios> {
-    // Guardar el archivo en el servidor (opcional)
-    const filePath = `./uploads/${file.originalname}`;
-    require('fs').writeFileSync(filePath, file.buffer);
+  ) {
+
+    if (!file) {
+      throw new BadRequestException('No se recibió ningún archivo.');
+    }
+
+    // Verificar que el archivo sea un CSV
+    if (!file.originalname.endsWith('.csv')) {
+      throw new BadRequestException('El archivo debe ser un CSV.');
+    }
+
+    // Crear el directorio de uploads si no existe
+    const uploadDir = './uploads';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir);
+    }
+
+    // Guardar temporalmente el archivo en el servidor
+    const filePath = `${uploadDir}/${Date.now()}_${file.originalname}`;
+    fs.writeFileSync(filePath, file.buffer);
 
     // Procesar el archivo y guardar los datos en la base de datos
-    return this.extractoService.create(createExtractoDTO, filePath);
+    try {
+      return await this.extractoService.create(createExtractoDTO, filePath);
+    } catch (error) {
+      console.error('Error al procesar el archivo:', error);
+      throw new BadRequestException(error.message || 'Error al procesar el archivo CSV.');
+    }
   }
 
   // Obtener todos los extractos bancarios
@@ -36,26 +56,11 @@ export class ExtractoBancarioController {
 
   // Obtener un extracto bancario por ID
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<ExtractosBancarios> {
-    try {
-      return await this.extractoService.findOne(id);
-    } catch (error) {
-      throw new NotFoundException(error.message);
+  async findOne(@Param('id') id: string): Promise<ExtractosBancarios> {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new BadRequestException(`El ID ${id} no es un número válido.`);
     }
-  }
-
-  // Comparar transacciones con los movimientos de un extracto
-  @Get(':id/conciliar')
-  async conciliarExtracto(@Param('id') extractoId: number) {
-    const extracto = await this.extractoService.findOne(extractoId);
-    if (!extracto) {
-      throw new NotFoundException(`Extracto con ID ${extractoId} no encontrado`);
-    }
-
-    // Obtener la cuenta bancaria asociada al extracto
-    const cuentaId = extracto.cuenta.id;
-
-    // Comparar transacciones con los movimientos del extracto
-    return this.conciliacionService.compararTransaccionesConExtracto(cuentaId, extractoId);
+    return this.extractoService.findOne(numericId);
   }
 }

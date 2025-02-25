@@ -5,6 +5,7 @@ import { AuditoriaConciliaciones } from 'src/auditoriaconciliaciones/entities/au
 import { AjustesConciliacion } from 'src/ajustesconciliacion/entities/ajustesconciliacion.entity';
 import { Reportes } from 'src/reportes/entities/reporte.entity';
 import { ExtractosBancarios } from 'src/extractobancario/entities/extractobancario.entity';
+import { EstadoConciliacion } from 'src/common/enums/estadoconciliacion.enum';
 @Entity()
 export class Conciliaciones {
   @PrimaryGeneratedColumn()
@@ -16,7 +17,7 @@ export class Conciliaciones {
 
   @ManyToOne(() => ExtractosBancarios, (extracto) => extracto.conciliaciones)
   @JoinColumn({ name: 'extracto_id' })
-  extracto: ExtractosBancarios; // Agrega esta relación
+  extracto: ExtractosBancarios; 
 
   @Column({ type: 'date' })
   fecha_inicio: Date;
@@ -24,8 +25,11 @@ export class Conciliaciones {
   @Column({ type: 'date' })
   fecha_fin: Date;
 
-  @Column({ type: 'enum', enum: ['pendiente', 'aprobado', 'rechazado'] })
-  estado: string;
+  @Column()
+  descripcion: string;
+
+  @Column({ type: 'enum', enum: EstadoConciliacion })
+  estado: EstadoConciliacion;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   creado_en: Date;

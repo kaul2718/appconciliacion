@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
-import { UsuarioscuentasService } from './usuarioscuentas.service';
-import { UsuarioscuentasController } from './usuarioscuentas.controller';
+import { UsuariosCuentasService } from './usuarioscuentas.service';
+import { UsuariosCuentasController } from './usuarioscuentas.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosCuentas } from './entities/usuarioscuenta.entity';
+import { User } from 'src/users/entities/user.entity';
+import { CuentaBancaria } from 'src/cuentabancaria/entities/cuentabancaria.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UsuariosCuentas])],  // Importa las entidades necesarias
-  controllers: [UsuarioscuentasController],
-  providers: [UsuarioscuentasService],
-  exports: [UsuarioscuentasService],
+  imports: [TypeOrmModule.forFeature([UsuariosCuentas,User,CuentaBancaria])],  // Importa las entidades necesarias
+  controllers: [UsuariosCuentasController],
+  providers: [UsuariosCuentasService],
+  exports: [UsuariosCuentasService],
 
 })
 export class UsuarioscuentasModule { }

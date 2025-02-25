@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, NotFoundException } from '@nestjs/common';
 import { ConciliacionService } from './conciliaciones.service';
 import { CreateConciliacioneDto } from './dto/create-conciliacione.dto';
 import { UpdateConciliacioneDto } from './dto/update-conciliacione.dto';
 import { Conciliaciones } from './entities/conciliacione.entity';
-import { DetallesConciliacion } from 'src/detallesconciliacion/entities/detallesconciliacion.entity';
 
 @Controller('conciliaciones')
 export class ConciliacionesController {
@@ -31,7 +30,7 @@ export class ConciliacionesController {
     }
   }
 
-  // Aprobar o rechazar una conciliación
+  // SIRVE PARA APROBAR O RECHAZAR UNA CONCILIACION
   @Patch(':id')
   async update(
     @Param('id') id: number,
@@ -40,12 +39,8 @@ export class ConciliacionesController {
     return this.conciliacionService.update(id, updateConciliacionDTO);
   }
 
-  // Obtener los detalles de una conciliación
-  @Get(':id/detalles')
-  async getDetalles(@Param('id') id: number): Promise<DetallesConciliacion[]> {
-    return this.conciliacionService.getDetalles(id);
-  }
 
+  //OJO TALVEZ VAYA EN DETALLESCONCILIACION RECURSO  
   // Comparar transacciones con los movimientos de un extracto
   @Get(':id/comparar')
   async compararTransaccionesConExtracto(@Param('id') conciliacionId: number) {
@@ -53,10 +48,8 @@ export class ConciliacionesController {
     if (!conciliacion) {
       throw new NotFoundException(`Conciliación con ID ${conciliacionId} no encontrada`);
     }
-
     const cuentaId = conciliacion.cuenta.id;
     const extractoId = conciliacion.extracto.id;
-
     return this.conciliacionService.compararTransaccionesConExtracto(cuentaId, extractoId);
   }
 }

@@ -14,4 +14,6 @@ export class UsuariosCuentas {
   @ManyToOne(() => CuentaBancaria, (cuenta) => cuenta.usuarios)
   @JoinColumn({ name: 'cuenta_id' })
   cuenta: CuentaBancaria;
+
+  
 }

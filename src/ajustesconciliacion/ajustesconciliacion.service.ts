@@ -1,26 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AjustesConciliacion } from './entities/ajustesconciliacion.entity';
 import { CreateAjustesconciliacionDto } from './dto/create-ajustesconciliacion.dto';
-import { UpdateAjustesconciliacionDto } from './dto/update-ajustesconciliacion.dto';
+import { Conciliaciones } from 'src/conciliaciones/entities/conciliacione.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
-export class AjustesconciliacionService {
-  create(createAjustesconciliacionDto: CreateAjustesconciliacionDto) {
-    return 'This action adds a new ajustesconciliacion';
-  }
+export class AjustesConciliacionService {
+  constructor(
+    @InjectRepository(AjustesConciliacion)
+    private readonly ajustesRepository: Repository<AjustesConciliacion>,
+    @InjectRepository(Conciliaciones)
+    private readonly conciliacionesRepository: Repository<Conciliaciones>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-  findAll() {
-    return `This action returns all ajustesconciliacion`;
-  }
+  async registrarAjuste(dto: CreateAjustesconciliacionDto) {
+    const conciliacion = await this.conciliacionesRepository.findOne({ where: { id: dto.conciliacionId } });
+    if (!conciliacion) throw new NotFoundException(`Conciliación con ID ${dto.conciliacionId} no encontrada`);
 
-  findOne(id: number) {
-    return `This action returns a #${id} ajustesconciliacion`;
-  }
+    const usuario = await this.userRepository.findOne({ where: { id: dto.usuarioId } });
+    if (!usuario) throw new NotFoundException(`Usuario con ID ${dto.usuarioId} no encontrado`);
 
-  update(id: number, updateAjustesconciliacionDto: UpdateAjustesconciliacionDto) {
-    return `This action updates a #${id} ajustesconciliacion`;
-  }
+    const ajuste = this.ajustesRepository.create({
+      conciliacion,
+      usuario,
+      monto_ajustado: dto.montoAjustado,
+      comentario: dto.comentario,
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} ajustesconciliacion`;
+    return this.ajustesRepository.save(ajuste);
   }
 }

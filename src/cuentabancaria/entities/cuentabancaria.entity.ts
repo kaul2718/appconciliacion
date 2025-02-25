@@ -4,6 +4,7 @@ import { UsuariosCuentas } from 'src/usuarioscuentas/dto/create-usuarioscuenta.d
 import { TransaccionesBancarias } from 'src/transacciones-bancarias/entities/transacciones-bancaria.entity';
 import { Conciliaciones } from 'src/conciliaciones/entities/conciliacione.entity';
 import { TipoCuentaBancaria } from 'src/common/enums/tipocuenta.enum';
+import { IsOptional } from 'class-validator';
 @Entity()
 export class CuentaBancaria {
   @PrimaryGeneratedColumn()
@@ -20,6 +21,10 @@ export class CuentaBancaria {
 
   @Column({ length: 10 })
   moneda: string;
+
+  @IsOptional()
+  @Column({ type: 'decimal', precision: 15, scale: 2 })
+  saldo: number;  // Asegúrate de tener esta propiedad
   
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;

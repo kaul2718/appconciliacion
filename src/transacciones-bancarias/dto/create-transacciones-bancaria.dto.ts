@@ -27,4 +27,6 @@ export class CreateTransaccionesBancariaDto {
     @IsNotEmpty({ message: 'El campo referencia no puede estar vacío' })
     @IsString({ message: 'El campo referencia debe ser una cadena de texto' })
     referencia: string;
+
+   
 }
